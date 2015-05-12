@@ -2,8 +2,8 @@
 ## Interface: 60100
 ## Notes: Autograts to relevant chat on achievement
 ## Title: Autogratzer
-## Version: 1.7
+## Version: 1.8
 ## DefaultState: Enabled
-## SavedVariablesPerCharacter: AG_GratsMessage,AG_GratsTimeMin,AG_GratsTimeMax,AG_GratsTimeWait,AG_GuildJoinMessageToggle,AG_Guild,AG_Say,AG_Party
+## SavedVariablesPerCharacter: AG_GratsMessage,AG_GratsTimeMin,AG_GratsTimeMax,AG_GratsTimeWait,AG_GuildJoinMessageToggle,AG_Guild,AG_Say,AG_Party,AG_Delay
 Autogratzer.lua
 Autogratzer.xml

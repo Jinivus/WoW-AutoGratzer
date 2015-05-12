@@ -9,10 +9,11 @@
     SLASH_AG2 = "/autogratzer";
     if(AG_GratsMessage == nil)then
 		AG_GratsMessage="Gratzzz";
+		AG_Print("Grats message set to: Gratzzz");
 		AG_LastMessage = 1;
 	end
 	if(AG_GuildJoinMessageToggle == nil)then
-			AG_GuildJoinMessageToggle = False;
+		AG_GuildJoinMessageToggle = False;
 	end
 	if(AG_Guild == nil)then
 		AG_Guild = true;
@@ -23,7 +24,11 @@
 	if(AG_Party == nil)then
 		AG_Party = false;
 	end
-	print("AG Enabled");
+	if(AG_Delay == nil)then
+		AG_Delay=0;
+		--AG_Print("Grats message delay set to: 1000ms");
+	end
+	AG_Print("AG Enabled");
 end
 
  function AG_GetCmd(msg)
@@ -40,6 +45,7 @@ end
 function AG_ShowHelp()
 	print("AutoGratzer usage:");
 	print("'/ag {msg}' or '/autogratzer {msg}'");
+	print("'/ag delay {delay}' or '/autogratzer {delay}', with delay in milliseconds to set delay");
 	print("'/ag guild' or '/autogratzer guild' to enable/disable guild gratzing");
 	print("'/ag say' or '/autogratzer say' to enable/disable say gratzing");
 	print("'/ag party' or '/autogratzer party' to enable/disable say gratzing");
@@ -48,37 +54,49 @@ end
 function AG_ToggleGuild()
 	if(AG_Guild) then 
 		AG_Guild = false; 
-		print("Guild gratzing now Off");
+		AG_Print("Guild gratzing now Off");
 	else
 		AG_Guild = true;    
-		print("Guild gratzing now On");
+		AG_Print("Guild gratzing now On");
 	end;
 end
 
 function AG_ToggleSay()
 	if(AG_Say) then 
 		AG_Say = false; 
-		print("Say gratzing now Off");
+		AG_Print("Say gratzing now Off");
 	else
 		AG_Say = true;
-		print("Say gratzing now On");
+		AG_Print("Say gratzing now On");
 	end;
 end
 
 function AG_ToggleParty()
 	if(AG_Party) then 
 		AG_Party = false; 
-		print("Party gratzing now Off");
+		AG_Print("Party gratzing now Off");
 	else
 		AG_Party = true; 
-		print("Party gratzing now On");
+		AG_Print("Party gratzing now On");
 	end;
 end
 
+function AG_SetDelay(delay)
+	if(delay ~= nill)then
+		AG_Delay = tonumber(delay); 
+		AG_Print("Grats message delay set to: " ..delay.."ms");	
+	else
+		AG_Print("Provide a number in milliseconds, eg '/ag delay 5000' for 5 seconds");
+	end
+end
 
 function AG_Command(msg)
     local Cmd, SubCmd = AG_GetCmd(msg);
     if (Cmd == "")then
+        AG_ShowHelp();
+    elseif (Cmd == "help")then
+        AG_ShowHelp();
+    elseif (Cmd == "options")then
         AG_ShowHelp();
     elseif (Cmd == "guild")then
         AG_ToggleGuild();
@@ -86,8 +104,11 @@ function AG_Command(msg)
         AG_ToggleSay();
     elseif (Cmd == "party")then
         AG_ToggleParty();
+	elseif (string.find(Cmd,"delay") == 1)then
+        AG_SetDelay(string.match(Cmd,"%d+"));
     else
         AG_GratsMessage = Cmd;
+		AG_Print("Grats message set to: " .. Cmd);
     end
 end
 
@@ -118,8 +139,12 @@ function AG_DoGrats(source)
 		end
 		--Time to wait after message is fixed at 6 seconds atm
 		if((CurTime - AG_LastMessage) > 6)then
-			SendChatMessage(AG_GratsMessage, source);
-			AG_LastMessage = GetTime();
+			if(AG_Delay > 0)then
+				C_Timer.After((AG_Delay/1000), function() SendChatMessage(AG_GratsMessage, "SAY"); end)
+			else
+				SendChatMessage(AG_GratsMessage, source);
+				AG_LastMessage = GetTime();
+			end
 		end
 	end
 end
@@ -131,4 +156,8 @@ function AG_GuildWelcome()
 			SendChatMessage("Welcome to the guild :D", "GUILD");		
 		end
     end
+end
+
+function AG_Print(msg)
+	print("\124cffffFF00[AG]\124r",msg);
 end
