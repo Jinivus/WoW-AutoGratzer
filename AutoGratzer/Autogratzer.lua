@@ -10,17 +10,19 @@
     if(AG_GratsMessage == nil)then
 		AG_GratsMessage="Gratzzz";
 		AG_LastMessage = 1;
-		if(AG_GuildJoinMessageToggle == nil)then
+	end
+	if(AG_GuildJoinMessageToggle == nil)then
 			AG_GuildJoinMessageToggle = False;
-			if(AG_Guild == nil)then
-				AG_Guild = true;
-			end
-			if(AG_Say == nil)then
-				AG_Say = true;
-			end
-			AG_Party = false;
-		end
-    end
+	end
+	if(AG_Guild == nil)then
+		AG_Guild = true;
+	end
+	if(AG_Say == nil)then
+		AG_Say = true;
+	end
+	if(AG_Party == nil)then
+		AG_Party = false;
+	end
 	print("AG Enabled");
 end
 
@@ -94,12 +96,11 @@ function AG_OnEvent(self,event,arg1,arg2)
 	if(AG_GratsMessage == nil)then
 		AG_GratsMessage="Gratzzz";
     end
-    if(arg2 ~= UnitName("player"))then
+    if(arg2 ~= ({UnitName("player")})[1])then
     	--if(event ~= "CHAT_MSG_SYSTEM") then print(event .. ";" .. arg1 .. ";" .. arg2); end
 	    if(event == "CHAT_MSG_GUILD_ACHIEVEMENT")then AG_DoGrats("GUILD");
 	    elseif(event == "CHAT_MSG_ACHIEVEMENT")then AG_DoGrats("SAY");
 	    elseif(event == "CHAT_MSG_ACHIEVEMENT")then AG_DoGrats("PARTY");
-	    elseif(event == "CHAT_MSG_GUILD") then AG_JiniWin(arg1,arg2);
 	    elseif(event == "CHAT_MSG_SYSTEM") then
 	    	if(id ~= nil) then
 				if(string.find(id,"has joined the guild.")) then AG_GuildWelcome();
@@ -110,7 +111,7 @@ function AG_OnEvent(self,event,arg1,arg2)
 end
 
 function AG_DoGrats(source)
-	if((source == "SAY" and AG_Say == true) or (source == "GUILD" and AG_Guild == true)) then
+	if((source == "SAY" and AG_Say == true) or (source == "GUILD" and AG_Guild == true) or (source == "PARTY" and AG_Party == true)) then
 		CurTime=GetTime();
 		if (AG_LastMessage == nil) then
 			AG_LastMessage = 1;
@@ -129,12 +130,5 @@ function AG_GuildWelcome()
 		if(string.find(arg1,"has joined the guild.")) then
 			SendChatMessage("Welcome to the guild :D", "GUILD");		
 		end
-    end
-end
-
---Definitly not a trap
-function AG_JiniWin(msg,auth)
-    if((msg == ">: D") and auth == "Jinívus")then
-        SendChatMessage(auth.." is the supreme overlord.", "GUILD");
     end
 end
