@@ -1,0 +1,13 @@
+﻿<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<Script file = "Autogratzer.lua" />
+	<Frame name="autogratzerMainFrame">
+		<Scripts>
+			<OnLoad>
+				AG_OnLoad(self);
+			</OnLoad>
+			<OnEvent> 
+				AG_OnEvent(self,event,...);
+			</OnEvent>
+		</Scripts>
+	</Frame>
+</Ui>
